@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nicolas Cage Randomizer</title>
+  <title>Pick a Cage</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    :root, [data-theme="light"] {
+    :root {
       --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
       --text-sm: clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
       --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
@@ -23,115 +23,181 @@
       --font-body: 'Inter', system-ui, sans-serif;
       --color-bg: #12100f;
       --color-surface: #1a1716;
-      --color-surface-2: #211d1b;
       --color-border: rgba(255,255,255,0.10);
       --color-text: #f4eee8;
       --color-text-muted: #c4b9ad;
       --color-text-faint: #8f847b;
       --color-primary: #b24635;
       --color-primary-hover: #cb5b49;
-      --shadow-lg: 0 18px 50px rgba(0,0,0,0.35);
       --gold: #d0a45c;
+      --gold-soft: rgba(208,164,92,0.18);
+      --shadow-lg: 0 18px 50px rgba(0,0,0,0.35);
     }
     *, *::before, *::after { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
-      margin: 0; min-height: 100vh; font-family: var(--font-body); font-size: var(--text-base); line-height: 1.6;
+      margin: 0;
+      min-height: 100vh;
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      line-height: 1.6;
       color: var(--color-text);
-      background: radial-gradient(circle at top, rgba(178,70,53,0.22), transparent 32%), radial-gradient(circle at 85% 20%, rgba(208,164,92,0.12), transparent 20%), linear-gradient(180deg, #141110 0%, #0f0d0c 100%);
+      background:
+        radial-gradient(circle at top, rgba(178,70,53,0.22), transparent 32%),
+        radial-gradient(circle at 85% 20%, rgba(208,164,92,0.12), transparent 20%),
+        linear-gradient(180deg, #141110 0%, #0f0d0c 100%);
     }
     img { display: block; max-width: 100%; height: auto; }
     button { font: inherit; }
+    h1, h2, h3, p { margin: 0; }
     .page { width: min(1180px, calc(100% - 2rem)); margin: 0 auto; padding: var(--space-8) 0 var(--space-16); }
     .hero { display: grid; gap: var(--space-8); align-items: center; padding: var(--space-8) 0 var(--space-10); }
-    .eyebrow { display: inline-flex; align-items: center; gap: var(--space-2); padding: 0.45rem 0.85rem; border: 1px solid var(--color-border); border-radius: var(--radius-full); background: rgba(255,255,255,0.03); color: var(--gold); font-size: var(--text-xs); letter-spacing: 0.12em; text-transform: uppercase; }
-    h1, h2, h3, p { margin: 0; }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: var(--space-2); padding: 0.45rem 0.85rem;
+      border: 1px solid var(--color-border); border-radius: var(--radius-full); background: rgba(255,255,255,0.03);
+      color: var(--gold); font-size: var(--text-xs); letter-spacing: 0.12em; text-transform: uppercase;
+    }
     .hero h1 { margin-top: var(--space-4); font-family: var(--font-display); font-size: var(--text-2xl); line-height: 0.95; max-width: 11ch; }
     .hero p { margin-top: var(--space-4); max-width: 62ch; color: var(--color-text-muted); }
     .layout { display: grid; gap: var(--space-8); grid-template-columns: 1.2fr 0.8fr; }
-    .panel { background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)); border: 1px solid var(--color-border); border-radius: var(--radius-xl); box-shadow: var(--shadow-lg); overflow: hidden; backdrop-filter: blur(10px); }
+    .panel {
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      border: 1px solid var(--color-border); border-radius: var(--radius-xl); box-shadow: var(--shadow-lg);
+      overflow: hidden; backdrop-filter: blur(10px);
+    }
     .result-media { position: relative; aspect-ratio: 16 / 9; background: #0d0c0b; overflow: hidden; }
     .result-media img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.01); }
-    .result-overlay { position: absolute; inset: auto 0 0 0; padding: var(--space-8); background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.2) 20%, rgba(0,0,0,0.85) 100%); }
+    .result-overlay {
+      position: absolute; inset: auto 0 0 0; padding: var(--space-8);
+      background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.2) 20%, rgba(0,0,0,0.85) 100%);
+    }
     .result-title { font-family: var(--font-display); font-size: clamp(2rem, 1.4rem + 2vw, 3.4rem); line-height: 0.95; margin-bottom: var(--space-3); }
     .result-meta { color: var(--color-text-muted); max-width: 40ch; }
-    .result-controls { display: flex; flex-wrap: wrap; gap: var(--space-4); padding: var(--space-6) var(--space-8) var(--space-8); align-items: center; justify-content: space-between; }
+    .result-controls {
+      display: flex; flex-wrap: wrap; gap: var(--space-4); padding: var(--space-6) var(--space-8) var(--space-8);
+      align-items: center; justify-content: space-between;
+    }
     .button-row { display: flex; flex-wrap: wrap; gap: var(--space-3); }
-    .btn { min-height: 48px; padding: 0.9rem 1.2rem; border-radius: var(--radius-full); border: 1px solid transparent; cursor: pointer; transition: transform 180ms ease, background 180ms ease, border-color 180ms ease, color 180ms ease; }
+    .btn {
+      min-height: 48px; padding: 0.9rem 1.2rem; border-radius: var(--radius-full); border: 1px solid transparent;
+      cursor: pointer; transition: transform 180ms ease, background 180ms ease, border-color 180ms ease, color 180ms ease, opacity 180ms ease;
+    }
     .btn:hover { transform: translateY(-1px); }
+    .btn:disabled { opacity: 0.65; cursor: wait; transform: none; }
     .btn-primary { background: var(--color-primary); color: white; box-shadow: 0 10px 22px rgba(178,70,53,0.28); }
     .btn-primary:hover { background: var(--color-primary-hover); }
-    .btn-secondary { background: rgba(255,255,255,0.03); border-color: var(--color-border); color: var(--color-text); }
+    .btn-reset { background: transparent; border-color: rgba(255,255,255,0.07); color: var(--color-text-faint); }
+    .btn-reset:hover { background: rgba(255,255,255,0.04); color: var(--color-text-muted); border-color: rgba(255,255,255,0.12); }
     .status { font-size: var(--text-sm); color: var(--color-text-faint); }
     .pool { padding: var(--space-6); display: grid; gap: var(--space-4); align-content: start; }
     .pool-head h2 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
     .pool-head p { color: var(--color-text-muted); font-size: var(--text-sm); }
     .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); }
-    .film-card { position: relative; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--color-border); background: var(--color-surface); cursor: pointer; padding: 0; text-align: left; }
+    .film-card {
+      position: relative; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--color-border);
+      background: var(--color-surface); cursor: pointer; padding: 0; text-align: left;
+      transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+    }
+    .film-card:hover { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(0,0,0,0.22); }
     .film-card img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; }
     .film-card .film-info { padding: var(--space-4); background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.04)); }
     .film-card strong { display: block; font-size: var(--text-sm); line-height: 1.25; }
     .film-card span { display: block; margin-top: 0.15rem; color: var(--color-text-faint); font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.08em; }
     .film-card.is-active { outline: 2px solid rgba(208,164,92,0.9); outline-offset: 2px; box-shadow: 0 0 0 8px rgba(208,164,92,0.08); }
-    .note { margin-top: var(--space-8); padding: var(--space-5); border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: rgba(255,255,255,0.03); color: var(--color-text-muted); font-size: var(--text-sm); }
     .footer { margin-top: var(--space-10); color: var(--color-text-faint); font-size: var(--text-sm); text-align: center; }
     .flash { animation: flashPick 450ms ease; }
-    @keyframes flashPick { 0% { transform: scale(1); filter: saturate(1); } 50% { transform: scale(1.015); filter: saturate(1.15); } 100% { transform: scale(1); filter: saturate(1); } }
+    .final-pick { animation: finalPickPulse 1200ms cubic-bezier(0.16, 1, 0.3, 1); }
+    .final-badge {
+      display: inline-flex; align-items: center; gap: var(--space-2); margin-top: var(--space-4);
+      padding: 0.4rem 0.8rem; border-radius: var(--radius-full); background: var(--gold-soft);
+      border: 1px solid rgba(208,164,92,0.4); color: #f7d9a0; font-size: var(--text-xs);
+      letter-spacing: 0.08em; text-transform: uppercase; opacity: 0; transform: translateY(6px);
+      transition: opacity 220ms ease, transform 220ms ease;
+    }
+    .final-badge.is-visible { opacity: 1; transform: translateY(0); }
+    @keyframes flashPick {
+      0% { transform: scale(1); filter: saturate(1); }
+      50% { transform: scale(1.015); filter: saturate(1.15); }
+      100% { transform: scale(1); filter: saturate(1); }
+    }
+    @keyframes finalPickPulse {
+      0% { box-shadow: inset 0 0 0 0 rgba(208,164,92,0), 0 18px 50px rgba(0,0,0,0.35); }
+      30% { box-shadow: inset 0 0 0 4px rgba(208,164,92,0.85), 0 0 0 10px rgba(208,164,92,0.12), 0 18px 50px rgba(0,0,0,0.4); }
+      100% { box-shadow: inset 0 0 0 1px rgba(208,164,92,0.18), 0 18px 50px rgba(0,0,0,0.35); }
+    }
     @media (max-width: 920px) { .layout { grid-template-columns: 1fr; } .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-    @media (max-width: 680px) { .page { width: min(100% - 1rem, 100%); } .hero h1 { max-width: 12ch; } .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .result-controls { padding-inline: var(--space-5); } .result-overlay { padding: var(--space-5); } .pool { padding: var(--space-5); } }
-    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } html { scroll-behavior: auto; } }
+    @media (max-width: 680px) {
+      .page { width: min(100% - 1rem, 100%); }
+      .hero h1 { max-width: 12ch; }
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .result-controls { padding-inline: var(--space-5); }
+      .result-overlay { padding: var(--space-5); }
+      .pool { padding: var(--space-5); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+      html { scroll-behavior: auto; }
+    }
   </style>
 </head>
 <body>
   <main class="page">
     <section class="hero" aria-labelledby="headline">
       <div>
-        <span class="eyebrow">7 Filme · 1 Zufallsauswahl</span>
-        <h1 id="headline">Welcher Nicolas Cage Film wird es heute?</h1>
-        <p>Eine kleine Webapp für die schnelle Zufallsauswahl aus deinem persönlichen Nicolas-Cage-Pool. Du kannst per Zufall wählen oder einen Titel direkt aus der Galerie anklicken.</p>
+        <span class="eyebrow">7 Cages · 1 Pick</span>
+        <h1 id="headline">Pick a Cage</h1>
+        <p>Die Qual der Wahl? Das muss nicht sein. Pick a Cage ist der ultimative Begleiter bei einem Treffen in Göttingen, wenn es darum geht, zu entscheiden, welcher Film geschaut wird.</p>
       </div>
     </section>
+
     <section class="layout" aria-label="Film-Auswahl">
       <article class="panel">
         <div class="result-media" id="resultPanel">
-          <img id="resultImage" src="./assets/1.jpg" alt="Color out of Space" width="1366" height="768" />
+          <img id="resultImage" src="./assets/8.jpg" alt="Pick a Cage Startbild" width="1366" height="768" />
           <div class="result-overlay">
-            <p class="eyebrow">Ausgewählter Film</p>
-            <h2 class="result-title" id="resultTitle">Color out of Space</h2>
-            <p class="result-meta" id="resultDescription">Klicke auf „Zufällig wählen“, und die App entscheidet für dich.</p>
+            <h2 class="result-title" id="resultTitle">Pick a Cage</h2>
+            <p class="result-meta" id="resultDescription">Klicke auf „Zufällig wählen“, um den Pool mit einer auslaufenden Mischanimation zu durchlaufen und einen Film zu bestimmen.</p>
+            <div class="final-badge" id="finalBadge">Final Pick</div>
           </div>
         </div>
         <div class="result-controls">
           <div class="button-row">
             <button class="btn btn-primary" id="randomBtn" type="button">Zufällig wählen</button>
-            <button class="btn btn-secondary" id="shuffleBtn" type="button">Kurz mischen</button>
+            <button class="btn btn-reset" id="resetBtn" type="button">Zurücksetzen</button>
           </div>
-          <p class="status" id="statusText">Aktuell bereit für die nächste Auswahl.</p>
+          <p class="status" id="statusText">Noch kein Film gewählt.</p>
         </div>
       </article>
+
       <aside class="panel pool">
         <div class="pool-head">
-          <h2>Dein Film-Pool</h2>
-          <p>Alle sieben Optionen auf einen Blick. Ein Klick auf eine Karte setzt den Film sofort als Ergebnis.</p>
+          <h2>Der Cage-Pool</h2>
+          <p>Sieben Cages stehen zur Verfügung... welcher wird es wohl werden?</p>
         </div>
         <div class="grid" id="filmGrid"></div>
-        <div class="note">
-          Für GitHub Pages reicht dieser Ordner bereits aus: <strong>index.html</strong> plus der Ordner <strong>assets</strong>.
-        </div>
       </aside>
     </section>
-    <p class="footer">Gemacht als statische Webapp – ideal für kostenloses Hosting über GitHub Pages.</p>
+
+    <p class="footer">Welcome to the NCU (Nicolas Cage Universe).</p>
   </main>
+
   <script>
     const films = [
-      { id: 1, title: 'Color out of Space', image: './assets/1.jpg', description: 'Kosmischer Horror, Neonfarben und völliger Wahnsinn.' },
-      { id: 2, title: 'Gunslingers', image: './assets/2.jpg', description: 'Staub, Revolver und Nicolas Cage im Western-Modus.' },
-      { id: 3, title: 'Longlegs', image: './assets/3.jpg', description: 'Düster, verstörend und genau richtig für einen schrägen Filmabend.' },
-      { id: 4, title: 'Pig', image: './assets/4.jpg', description: 'Melancholisch, ruhig und vielleicht die emotionalste Wahl.' },
-      { id: 5, title: 'Renfield', image: './assets/5.jpg', description: 'Blutig, absurd und mit herrlich überdrehter Cage-Energie.' },
-      { id: 6, title: 'Surfer', image: './assets/6.jpg', description: 'Hitze, Druck und ein zunehmend surrealer Trip.' },
-      { id: 7, title: 'Sympathy for the Devil', image: './assets/7.jpg', description: 'Nachtfahrt, Spannung und Cage mit maximalem Intensitätsgrad.' }
+      { id: 1, title: 'Color out of Space', image: './assets/1.jpg', description: '2019 · Science-Fiction/Horror · RT: 86 % / 82 %' },
+      { id: 2, title: 'Gunslingers', image: './assets/2.jpg', description: '2025 · Western/Action · RT: 5 % / 18 %' },
+      { id: 3, title: 'Longlegs', image: './assets/3.jpg', description: '2024 · Horror/Thriller · RT: 85 % / 61 %' },
+      { id: 4, title: 'Pig', image: './assets/4.jpg', description: '2021 · Drama · RT: 97 % / 83 %' },
+      { id: 5, title: 'Renfield', image: './assets/5.jpg', description: '2023 · Horror/Komödie · RT: 58 % / 78 %' },
+      { id: 6, title: 'The Surfer', image: './assets/6.jpg', description: '2024 · Psychothriller · RT: 84 % / 46 %' },
+      { id: 7, title: 'Sympathy for the Devil', image: './assets/7.jpg', description: '2023 · Thriller · RT: 60 % / 43 %' }
     ];
+
+    const startScreen = {
+      title: 'Pick a Cage',
+      image: './assets/8.jpg',
+      description: 'Klicke auf „Zufällig wählen“, um den Pool mit einer auslaufenden Mischanimation zu durchlaufen und einen Film zu bestimmen.'
+    };
+
     const resultImage = document.getElementById('resultImage');
     const resultTitle = document.getElementById('resultTitle');
     const resultDescription = document.getElementById('resultDescription');
@@ -139,9 +205,12 @@
     const resultPanel = document.getElementById('resultPanel');
     const filmGrid = document.getElementById('filmGrid');
     const randomBtn = document.getElementById('randomBtn');
-    const shuffleBtn = document.getElementById('shuffleBtn');
-    let activeId = 1;
-    let shuffleTimer = null;
+    const resetBtn = document.getElementById('resetBtn');
+    const finalBadge = document.getElementById('finalBadge');
+
+    let activeId = null;
+    let animationRunning = false;
+
     function renderGrid() {
       filmGrid.innerHTML = films.map(film => `
         <button class="film-card ${film.id === activeId ? 'is-active' : ''}" type="button" data-id="${film.id}" aria-label="${film.title} auswählen">
@@ -152,46 +221,96 @@
           </div>
         </button>
       `).join('');
+
       filmGrid.querySelectorAll('.film-card').forEach(card => {
         card.addEventListener('click', () => {
+          if (animationRunning) return;
           const film = films.find(item => item.id === Number(card.dataset.id));
           setFilm(film, 'Direkt ausgewählt.');
         });
       });
     }
-    function setFilm(film, status = 'Zufallsauswahl abgeschlossen.') {
+
+    function flashPanel() {
+      resultPanel.classList.remove('flash');
+      void resultPanel.offsetWidth;
+      resultPanel.classList.add('flash');
+    }
+
+    function setFinalState(active) {
+      resultPanel.classList.remove('final-pick');
+      finalBadge.classList.remove('is-visible');
+      if (active) {
+        void resultPanel.offsetWidth;
+        resultPanel.classList.add('final-pick');
+        finalBadge.classList.add('is-visible');
+      }
+    }
+
+    function setFilm(film, status = 'Cage is picked.') {
       activeId = film.id;
       resultImage.src = film.image;
       resultImage.alt = film.title;
       resultTitle.textContent = film.title;
       resultDescription.textContent = film.description;
       statusText.textContent = status;
-      resultPanel.classList.remove('flash');
-      void resultPanel.offsetWidth;
-      resultPanel.classList.add('flash');
+      setFinalState(status === 'Zufallsauswahl abgeschlossen.');
+      flashPanel();
       renderGrid();
     }
-    function pickRandomFilm() {
-      const index = Math.floor(Math.random() * films.length);
-      setFilm(films[index]);
+
+    function resetToStart(status = 'Zurückgesetzt. Noch kein Film gewählt.') {
+      activeId = null;
+      resultImage.src = startScreen.image;
+      resultImage.alt = startScreen.title;
+      resultTitle.textContent = startScreen.title;
+      resultDescription.textContent = startScreen.description;
+      statusText.textContent = status;
+      setFinalState(false);
+      flashPanel();
+      renderGrid();
     }
-    function shuffleThenPick() {
-      clearInterval(shuffleTimer);
-      let cycles = 0;
+
+    function runRandomAnimation() {
+      if (animationRunning) return;
+      animationRunning = true;
+      randomBtn.disabled = true;
+      resetBtn.disabled = true;
       statusText.textContent = 'Mischt gerade ...';
-      shuffleTimer = setInterval(() => {
-        const temp = films[Math.floor(Math.random() * films.length)];
-        setFilm(temp, 'Mischt gerade ...');
-        cycles += 1;
-        if (cycles >= 10) {
-          clearInterval(shuffleTimer);
-          pickRandomFilm();
-        }
-      }, 110);
+      setFinalState(false);
+
+      const steps = [80, 95, 110, 130, 155, 185, 220, 265, 320, 390, 480, 600, 760, 940, 1180];
+      let elapsed = 0;
+      let lastFilm = null;
+
+      steps.forEach((delay, index) => {
+        elapsed += delay;
+        setTimeout(() => {
+          let temp = films[Math.floor(Math.random() * films.length)];
+          if (lastFilm && films.length > 1) {
+            while (temp.id === lastFilm.id) {
+              temp = films[Math.floor(Math.random() * films.length)];
+            }
+          }
+          lastFilm = temp;
+          setFilm(temp, index === steps.length - 1 ? 'Zufallsauswahl abgeschlossen.' : 'Mischt gerade ...');
+
+          if (index === steps.length - 1) {
+            animationRunning = false;
+            randomBtn.disabled = false;
+            resetBtn.disabled = false;
+          }
+        }, elapsed);
+      });
     }
-    randomBtn.addEventListener('click', pickRandomFilm);
-    shuffleBtn.addEventListener('click', shuffleThenPick);
-    renderGrid();
+
+    randomBtn.addEventListener('click', runRandomAnimation);
+    resetBtn.addEventListener('click', () => {
+      if (animationRunning) return;
+      resetToStart();
+    });
+
+    resetToStart('Bereit zum Start.');
   </script>
 </body>
 </html>
